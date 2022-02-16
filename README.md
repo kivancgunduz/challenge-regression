@@ -25,4 +25,4 @@ Linear regression application with real-estate data
 #### Timeline
 - Duration: 5 days
 
-<img src="https://i.gifer.com/SRL3.gif">
+<img src="https://media1.giphy.com/media/iPj5oRtJzQGxwzuCKV/giphy.gif?cid=ecf05e47sezasfs5hsj4e0bgeg0utgm73l9jl38q8sn5xf2m&rid=giphy.gif&ct=g">

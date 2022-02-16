@@ -25,7 +25,7 @@ raw_data['Price'] = raw_data['Price'].astype(np.int64)
 #Bedrooms
 raw_data[raw_data['Type of property'] =='flat-studio']['Bedrooms'].all = 0
 raw_data.drop(raw_data[raw_data["Bedrooms"] == "None"].index, inplace=True)
-raw_data["Bedrooms"] = raw_data['Bedrooms'].astype(np.int16)
+raw_data["Bedrooms"] = raw_data['Bedrooms'].astype(int)
 
 # Living Area 
 
@@ -107,19 +107,32 @@ raw_data['Terrace surface'] = raw_data['Terrace surface'].replace('None', 0).ast
 raw_data['Garden surface'] = raw_data['Garden surface'].replace('None', 0).astype(int)
 
 # surface of the plot 
-raw_data = raw_data.drop(columns=['Surface of the plot'])
+
+raw_data['Surface of the plot'] = raw_data['Surface of the plot'].replace('None', None)
+raw_data['Surface of the plot'] = raw_data['Surface of the plot'].fillna(raw_data['Living area'])
+
+raw_data['Surface of the plot'] = raw_data['Surface of the plot'].astype(int)
 
 # Locality
-#raw_data = pd.get_dummies(raw_data['Locality'],prefix='Locality', drop_first=False)
+
+locality_stat = raw_data['Locality'].value_counts(ascending=False)
+
+locality_less_10 = locality_stat[locality_stat <= 10]
+raw_data['Locality'] = raw_data['Locality'].apply(lambda x: 'other' if x in locality_less_10 else x)
+print(len(raw_data.columns))
+raw_data_dummies = pd.get_dummies(raw_data,columns=['Locality'], drop_first=True)
+print(len(raw_data_dummies.columns))
 
 # Calculate correration and Remove strong correration column
-corr_mat = raw_data.corr().round(2)
-print(corr_mat)
+corr_mat = raw_data_dummies.corr().round(2)
+#print(corr_mat)
+"""
 plt.figure(figsize=(10, 5))
 sns.heatmap(corr_mat, vmax=1, annot=True, linewidths=.5)
 plt.xticks(rotation=30, horizontalalignment='right')
 plt.show()
+"""
+
 
 # Saving clean data
-
-raw_data.to_csv('./data/cleaned_data.csv')
+raw_data_dummies.to_csv('./data/cleaned_data.csv')

@@ -7,7 +7,9 @@ from sklearn.linear_model import LinearRegression
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.preprocessing import StandardScaler
 
+
 df = pd.read_csv("C:/Users/kivan/Desktop/becode_projects/challenge-regression/data/cleaned_data.csv")
+"""
 log_price = np.log(df['Price'])
 
 # Then we add it to our data frame
@@ -19,7 +21,7 @@ df['log_living'] = log_living
 df.drop(["Price","Living area"], axis=1)
 
 ## Simple Linear Regression
-"""
+
 price_df = np.array(df['Price'])
 living_df = np.array(df['Living area'])
 
@@ -45,11 +47,11 @@ plt.title("Price vs living area (Test set)")
 plt.xlabel("Living area")
 plt.ylabel("Price")
 #plt.show()
-"""
 
+"""
 # Multi Linear Regression
-y = df["log_price"]
-X = df.drop(["log_price"], axis=1)
+y = df["Price"]
+X = df.drop(["Price"], axis=1)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y , test_size=0.2, random_state=0)
 scaler = StandardScaler()
@@ -67,9 +69,7 @@ print(regressor.score(X_test, y_test))
 
 plt.scatter(y_train, predict)
 plt.title('Target vs Prediction')
-plt.xlabel('Targets (y_train)',size=18)
-plt.ylabel('Predictions (predict)',size=18)
+plt.xlabel('Target',size=18)
+plt.ylabel('Prediction',size=18)
 plt.show()
-
-
 

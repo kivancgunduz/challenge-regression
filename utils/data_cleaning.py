@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 #Read raw data from file
 raw_data = pd.read_csv("C:/Users/kivan/Desktop/becode_projects/challenge-regression/data/raw_data.csv")
@@ -119,20 +120,40 @@ locality_stat = raw_data['Locality'].value_counts(ascending=False)
 
 locality_less_10 = locality_stat[locality_stat <= 10]
 raw_data['Locality'] = raw_data['Locality'].apply(lambda x: 'other' if x in locality_less_10 else x)
-print(len(raw_data.columns))
 raw_data_dummies = pd.get_dummies(raw_data,columns=['Locality'], drop_first=True)
-print(len(raw_data_dummies.columns))
 
 # Calculate correration and Remove strong correration column
-corr_mat = raw_data_dummies.corr().round(2)
+df2 = raw_data.drop(['Locality'], axis=1)
+corr_mat = df2.corr().round(2)
 #print(corr_mat)
-"""
+
 plt.figure(figsize=(10, 5))
 sns.heatmap(corr_mat, vmax=1, annot=True, linewidths=.5)
 plt.xticks(rotation=30, horizontalalignment='right')
 plt.show()
-"""
+
+
+variables = raw_data_dummies[
+    [
+        "Building condition",
+        "Kitchen type",
+        "Bedrooms",
+        "Furnished",
+        "Number of frontages",
+        "Swimming pool",
+        "Garden surface",
+        "Terrace surface",
+        "Surface of the plot",
+        "Living area",
+        "Type of property"
+    ]
+]
+
+vif = pd.DataFrame()
+vif["VIF"] = [variance_inflation_factor(variables.values, i) for i in range(variables.shape[1])]
+vif["Features"] = variables.columns
+print(vif)
 
 
 # Saving clean data
-raw_data_dummies.to_csv('./data/cleaned_data.csv')
+#raw_data_dummies.to_csv('./data/cleaned_data.csv')
